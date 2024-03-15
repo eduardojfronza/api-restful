@@ -457,3 +457,7 @@ apos isso vamos no controller para usarmos esse repository e criarmos a rota:
     };
   }
 ```
+
+## CRUD de produtos
+O crud de produtos foi construido da mesma maneira e com a mesma lógica do usuário, apenas alterando os nomes.
+
