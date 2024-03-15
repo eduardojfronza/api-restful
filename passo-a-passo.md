@@ -4,7 +4,7 @@
 npx @nestjs/cli new loja
 ```
 
-para fazer com que sempre que salvamos algo no projeto e mostre na API rodamos em ambiente de desenvolvimento:
+para fazer com que sempre que alterarmos algo mostre em tempo real rodamos em ambiente de desenvolvimento:
 
 ```jsx
 npm run start:dev
@@ -17,11 +17,11 @@ para começar vamos excluir alguns arquivos, são eles:
 - app.controller.ts
 - app.service.ts
 
-e no app.module.ts vamos tirar suas importações
+e no **app.module.ts** vamos tirar suas importações
 
 ## Criando usuario
 
-agora criamos uma pasta chamada **usuario**. O primeiro controller que vamos criar é o do usuario, assim criamos um **usuario.controller.ts**
+agora  para organizar, criamos uma pasta chamada **usuario**. O primeiro controller que vamos criar é o de usuario, assim criamos um **usuario.controller.ts**
 
 ```jsx
 import { Body, Controller, Post } from "@nestjs/common";
@@ -49,11 +49,15 @@ import { UsuarioController } from "./controllers/usuario.controller";
 export class AppModule {}
 ```
 
-agora se formos testar no http://localhost:3000/usuarios, vai retornar o que escrevemos.
+agora se formos testar na rota: http://localhost:3000/usuarios, vai retornar o que escrevemos:
+
+```jsx
+ Usuario criado com sucesso!
+```
 
 ## Salvando dados do usuario
 
-para salvar as informações do usuario precisamos criar um dentro pasta **usuario** um arquivo **usuario.repository.ts**
+para salvar as informações do usuário precisamos criar dentro pasta **usuario** um arquivo **usuario.repository.ts**
 
 ```jsx
 import { Injectable } from '@nestjs/common';
@@ -75,7 +79,7 @@ export class UsuarioRepository {
 
 nesse caso, por enquanto, não vamos usar um banco. Para resolver isso vamos salvar na memoria mesmo, em um array.
 
-no controller vamos implementar isso, junto com um para listar usuarios
+no controller vamos implementar isso. Alem disso, criamos junto uma rota para listar os usuários
 
 ```jsx
 import { Body, Controller, Get, Post } from '@nestjs/common';
@@ -101,7 +105,7 @@ export class UsuarioController {
 
 ## Criando modulos
 
-agora vamos criar o modulo do usuario, para ficar mais organizado. Para isso criamos uma dentro da pasta **usuarios** um arquivo **usuario.module.ts:**
+agora vamos criar o modulo do usuários, para ficar mais organizado. Para isso criamos um arquivo **usuario.module.ts:** dentro da pasta **usuarios**:
 
 ```jsx
 import { Module } from "@nestjs/common";
@@ -126,7 +130,7 @@ import { UsuarioModule } from "./modules/usuario.modules";
 export class AppModule {}
 ```
 
-## Injeção de dependecias
+## Injeção de dependencias
 
 para não ficar instanciando objetos na mão podemos fazer o seguinte, no **controller**:
 
@@ -134,11 +138,11 @@ para não ficar instanciando objetos na mão podemos fazer o seguinte, no **cont
   // Substituimos esse
   private usuarioRepository = = new UsuarioRepository();
 
-	// Por esse
+  // Por esse
   constructor(private usuarioRepository: UsuarioRepository) {}
 ```
 
-dessa forma o proprio nest gerencia ele no meu lugar.
+dessa forma o proprio nest gerencia.
 
 agora no **usuario.repository.ts** colocamos o seguinte codigo, antes da exportação:
 
@@ -151,6 +155,7 @@ import { Injectable } from '@nestjs/common';
 ## Criando validações
 
 agora precisamos criar um arquivo que defina quais dados vamos receber em nossa API. Para isso vamos criar uma pasta chamada **dto** dentro de usuarios e um arquivo **CriaUsuarioDTO.ts**.
+</br></br> <a href="https://fullcycle.com.br/o-que-e-dto/">O que é DTO?</a>
 
 ```jsx
 export class CriaUsuarioDTO {
@@ -161,7 +166,7 @@ export class CriaUsuarioDTO {
 
 ```
 
-agora podemos tipar os dados do usuario em nosso controller:
+agora podemos tipar os dados do usuário em nosso controller, fazendo com que só recebea os dados que estão no DTO:
 
 ```jsx
   @Post()
@@ -171,13 +176,13 @@ agora podemos tipar os dados do usuario em nosso controller:
   }
 ```
 
-vamos instalar tambem as seguintes libs:
+agora, vamos instalar as seguintes dependencias, para fazermos as validações:
 
 ```jsx
 npm install class-validator class-transformer
 ```
 
-agora podemos fazer validações, da seguinte forma:
+agora podemos fazer validações direto do DTO, da seguinte forma:
 
 ```jsx
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
@@ -206,13 +211,13 @@ app.useGlobalPipes(
     })
 ```
 
-- transform: transforma o JSON em nosso DTO
-- whiteList: ignora todas as propriedades do JSON que não está no DTO
-- forbidNonWhitelisted: informa um erro caso alguem passe algo que não está no DTO
+- **transform**: transforma o JSON em nosso DTO
+- **whiteList**: ignora todas as propriedades do JSON que não está no DTO
+- **forbidNonWhitelisted**: informa um erro caso o usuário tente enviar algo que não está no DTO
 
 ## Validando e-mail unico
 
-para verificarmos se o email é unico vamos criar um validador. Para isso criamos uma pasta chamada **validacao** dentro de **usuarios** e um arquivo **EmailValidator.ts:**
+para verificarmos se o email é unico vamos criar um validador. Para isso criamos uma pasta dentro de **usuarios** chamada **validacao**  e um arquivo **EmailValidator.ts:**
 
 ```jsx
 import {
@@ -257,7 +262,7 @@ export const EmailUnico = (opcesDeValidacao: ValidationOptions) => {
 
 ```
 
-no **UsuariorRepository** precisamos adicionar uma função:
+no **UsuariorRepository** precisamos adicionar uma função, para verificar se o email existe:
 
 ```jsx
   async existeComEmail(email: string) {
@@ -278,9 +283,9 @@ agora no nosso DTO podemos usar o nosso validador:
 
 ```
 
-antes de funcionar precisamos fazer com que o class-validator consiga resolver as dependencias ou classes do mesmo jeito que o Nest.js
+antes de funcionar precisamos fazer com que o **class-validator** consiga resolver as dependencias ou classes do mesmo jeito que o Nest.js
 
-para isso vamos no main e adicionamos essa linha:
+para isso vamos no **main** e adicionamos essa linha:
 
 ```jsx
 useContainer(app.select(AppModule), { fallbackOnErrors: true });
