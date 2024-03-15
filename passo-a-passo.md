@@ -291,7 +291,7 @@ para isso vamos no **main** e adicionamos essa linha:
 useContainer(app.select(AppModule), { fallbackOnErrors: true });
 ```
 
-\*\* ADICIONAR AOS MODULOS DO USUARIO
+\*\* ADICIONAR O EMAILVALIDATOR AOS MODULOS DO USUARIO
 
 ## Criando a entidade do usuário
 
@@ -313,7 +313,7 @@ agora podemos tipar a array de usuarios no **repository**
   private usuarios: UsuarioEntity[] = [];
 ```
 
-vamos alterar nosso controle tambem:
+vamos alterar nosso controller tambem:
 
 ```jsx
 import { v4 as uuid } from "uuid";
@@ -332,7 +332,7 @@ return { id: usuarioEntity.id, message: "Usuário criado com sucesso!" };
 npm install uuid
 ```
 
-agora se enviarmos um usuario, so retornará o id do usario criado.
+agora se enviarmos um usuario, so retornará o id do usuário criado.
 
 porem, no GET que lista os usuarios ainda vai retornar todas as informações. Para resolver isso, vamos criar um novo DTO, o **LisaUsuarioDTO.ts**
 
@@ -346,7 +346,7 @@ export class ListaUsuarioDTO {
 
 ```
 
-agora no controller, vamos fazer algumas alterações
+agora no controller, vamos fazer algumas alterações, para funcionar o DTO de ListaUsuario
 
 ```jsx
 @Post()
@@ -400,7 +400,7 @@ para atualizar o usuario precisamos criar um rota PUT no controller:
   }
 ```
 
-e a função **atualizar** no repository:
+e a função **atualiza** no repository:
 
 ```jsx
   // O partial significa que vamos receber um dado parcial de uma entidade
